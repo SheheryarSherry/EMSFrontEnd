@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { NgForm, ɵangular_packages_forms_forms_w } from '@angular/forms';
 import { UserService } from 'src/app/shared/user.service';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ formModel={
   UserName: '',
   Password: ''
 }
-  constructor(private service:UserService,private router: Router) { }
+  constructor(private service:UserService,private router: Router, private toastr: ToastrService) { }
 
   ngOnInit() {
   }
@@ -23,7 +24,12 @@ formModel={
         localStorage.setItem('token',res.token);
         this.router.navigateByUrl('/home');
       },
-      err => {}
+      err => {
+        if(err.status == 400)
+        this.toastr.error('in correct Username Or password.','Authentication failed.');
+        else
+        console.log(err);
+      }
     );
   }
 }
